@@ -1,0 +1,29 @@
+{
+  "name": "mini-operations-erp",
+  "version": "1.0.0",
+  "description": "Mini Operations ERP - Production-Oriented MERN Stack System",
+  "scripts": {
+    "postinstall": "cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && node seed.js",
+    "test": "cd backend && npm test",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && node server.js",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev"
+  },
+  "keywords": [
+    "mern",
+    "erp",
+    "inventory-management",
+    "work-orders",
+    "stock-transfer",
+    "customer-orders",
+    "concurrency",
+    "mongodb",
+    "express",
+    "react",
+    "nodejs"
+  ],
+  "author": "Janhavi",
+  "license": "MIT"
+}
