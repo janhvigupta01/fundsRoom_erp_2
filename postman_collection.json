@@ -1,0 +1,215 @@
+{
+  "info": {
+    "name": "Mini Operations ERP API",
+    "_postman_id": "mini-operations-erp-api-2026",
+    "description": "Complete Postman collection for Mini Operations ERP (MERN Stack)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@erp.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login (Operations User)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ops@erp.com\",\n  \"password\": \"ops123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login (Sales User)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sales@erp.com\",\n  \"password\": \"sales123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "Get All Inventory",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/inventory", "host": ["{{baseUrl}}"], "path": ["inventory"] }
+          }
+        },
+        {
+          "name": "Add / Update Stock (Admin/Ops Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item\": \"Steel Rods\",\n  \"category\": \"Raw Material\",\n  \"location\": \"Warehouse Mumbai\",\n  \"batch\": \"BATCH-MUM-01\",\n  \"physicalQuantity\": 50\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/inventory", "host": ["{{baseUrl}}"], "path": ["inventory"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Work Orders",
+      "item": [
+        {
+          "name": "Check Material Stock & Shortage",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/work-orders/check-stock?location=Warehouse Mumbai&item=Steel Rods&requiredQuantity=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["work-orders", "check-stock"],
+              "query": [
+                { "key": "location", "value": "Warehouse Mumbai" },
+                { "key": "item", "value": "Steel Rods" },
+                { "key": "requiredQuantity", "value": "100" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Work Order (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workOrderId\": \"WO-1005\",\n  \"location\": \"Warehouse Mumbai\",\n  \"item\": \"Steel Rods\",\n  \"requiredQuantity\": 100,\n  \"assignedUser\": \"Rahul Sharma (Ops)\",\n  \"notes\": \"Quarterly manufacturing batch\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/work-orders", "host": ["{{baseUrl}}"], "path": ["work-orders"] }
+          }
+        },
+        {
+          "name": "Get Work Orders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/work-orders", "host": ["{{baseUrl}}"], "path": ["work-orders"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Internal Stock Transfers",
+      "item": [
+        {
+          "name": "Request Transfer (Ops/Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceLocation\": \"Plant Pune\",\n  \"destinationLocation\": \"Warehouse Mumbai\",\n  \"item\": \"Steel Rods\",\n  \"quantity\": 40\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/transfers", "host": ["{{baseUrl}}"], "path": ["transfers"] }
+          }
+        },
+        {
+          "name": "Dispatch Transfer (Reduces Source Stock)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/transfers/:id/dispatch", "host": ["{{baseUrl}}"], "path": ["transfers", ":id", "dispatch"] }
+          }
+        },
+        {
+          "name": "Receive Transfer (Increases Destination Stock)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/transfers/:id/receive", "host": ["{{baseUrl}}"], "path": ["transfers", ":id", "receive"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer Orders",
+      "item": [
+        {
+          "name": "Create Order & Reserve Stock (Sales/Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Tata Motors Ltd\",\n  \"location\": \"Warehouse Mumbai\",\n  \"item\": \"Steel Rods\",\n  \"quantity\": 20\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] }
+          }
+        },
+        {
+          "name": "Cancel Order & Release Stock",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/orders/:id/cancel", "host": ["{{baseUrl}}"], "path": ["orders", ":id", "cancel"] }
+          }
+        },
+        {
+          "name": "Simulate Concurrency Race Condition Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"location\": \"Warehouse Mumbai\",\n  \"item\": \"Steel Rods\",\n  \"userARequestQty\": 80,\n  \"userBRequestQty\": 50\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/orders/simulate-concurrency", "host": ["{{baseUrl}}"], "path": ["orders", "simulate-concurrency"] }
+          }
+        }
+      ]
+    }
+  ]
+}
