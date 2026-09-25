@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDb from "./config/db.js";
+import mongoose from "mongoose";
 
 // Routes
 import authRoutes from "./routes/authRoutes.js";
@@ -41,6 +42,18 @@ app.use("/api/audit", auditRoutes);
 // Health check endpoint
 app.get("/api/health", (req, res) => {
     res.json({ status: "OK", timestamp: new Date().toISOString(), service: "Mini Operations ERP API" });
+});
+
+// Diagnostic endpoint to check DB connection on cloud
+app.get("/api/debug-db", (req, res) => {
+    const states = ["disconnected", "connected", "connecting", "disconnecting"];
+    res.json({
+        dbState: states[mongoose.connection.readyState] || mongoose.connection.readyState,
+        hasMONGODB_URL: !!process.env.MONGODB_URL,
+        hasNONGODB_URL: !!process.env.NONGODB_URL,
+        allMatchedKeys: Object.keys(process.env).filter(k => k.toUpperCase().includes("MONGO") || k.toUpperCase().includes("NONG")),
+        nodeEnv: process.env.NODE_ENV
+    });
 });
 
 // Serve frontend static build in production
